@@ -41,6 +41,8 @@ app.on('ready', () => {
     mainWindow.openDevTools();
   }
 
+  console.log(mainWindow);
+
   if (process.platform === 'darwin') {
     template = [{
       label: 'Electron',

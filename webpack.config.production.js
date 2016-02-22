@@ -19,13 +19,13 @@ config.module.loaders.push({
   test: /^((?!\.module).)*\.css$/,
   loader: ExtractTextPlugin.extract(
     'style-loader',
-    'css-loader'
+    'style!css?-autoprefixer&modules&localIdentName=[name]---[local]---[hash:base64:5]'
   )
 }, {
   test: /\.module\.css$/,
   loader: ExtractTextPlugin.extract(
     'style-loader',
-    'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]'
+    'style!css?-autoprefixer&modules&localIdentName=[name]---[local]---[hash:base64:5]'
   )
 });
 
