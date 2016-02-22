@@ -7,9 +7,14 @@ const BrowserWindow = electron.BrowserWindow;
 const Menu = electron.Menu;
 const crashReporter = electron.crashReporter;
 const shell = electron.shell;
+const ipcMain = electron.ipcMain;
 let menu;
 let template;
 let mainWindow = null;
+
+const serverIP = require('./server/serverIP');
+const gamePath = require('./server/gamePath');
+const gameData = require('./server/gameData');
 
 
 crashReporter.start();
@@ -22,6 +27,15 @@ if (process.env.NODE_ENV === 'development') {
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
+
+
+/* Communication */
+ipcMain.on('getServerIP', (event) => serverIP.get(event));
+ipcMain.on('setGamePath', (event) => gamePath.set(event));
+ipcMain.on('getGameData', (event) => gameData.get(event));
+
+
+/* End of communication */
 
 
 app.on('ready', () => {
@@ -41,11 +55,9 @@ app.on('ready', () => {
     mainWindow.openDevTools();
   }
 
-  console.log(mainWindow);
-
   if (process.platform === 'darwin') {
     template = [{
-      label: 'Electron',
+      label: 'rFactor Telemetry Server',
       submenu: [{
         label: 'About ElectronReact',
         selector: 'orderFrontStandardAboutPanel:'

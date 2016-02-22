@@ -15,20 +15,6 @@ config.entry = './app/index';
 
 config.output.publicPath = '../dist/';
 
-config.module.loaders.push({
-  test: /^((?!\.module).)*\.css$/,
-  loader: ExtractTextPlugin.extract(
-    'style-loader',
-    'style!css?-autoprefixer&modules&localIdentName=[name]---[local]---[hash:base64:5]'
-  )
-}, {
-  test: /\.module\.css$/,
-  loader: ExtractTextPlugin.extract(
-    'style-loader',
-    'style!css?-autoprefixer&modules&localIdentName=[name]---[local]---[hash:base64:5]'
-  )
-});
-
 config.plugins.push(
   new webpack.optimize.OccurenceOrderPlugin(),
   new webpack.DefinePlugin({

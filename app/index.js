@@ -2,8 +2,26 @@ import React from 'react';
 import { render } from 'react-dom';
 import controller from './controller.js';
 import { Container } from 'cerebral-view-react';
+import Http from 'cerebral-module-http';
+import Router from 'cerebral-module-router';
 import App from './App';
-import './app.css';
+import ServerDashboard from './modules/serverDashboard';
+import electron from './services/electron';
+
+controller.addServices({
+  electron
+});
+
+controller.addModules({
+  serverDashboard: ServerDashboard(),
+  http: Http(),
+  router: Router({
+    '/': 'serverDashboard.opened'
+  }, {
+    onlyHash: true,
+    mapper: {query: true}
+  })
+});
 
 render(
   <Container controller={controller}>

@@ -11,7 +11,7 @@ const argv = require('minimist')(process.argv.slice(2));
 const pkg = require('./package.json');
 const devDeps = Object.keys(pkg.devDependencies);
 
-const appName = argv.name || argv.n || pkg.productName;
+const appName = pkg.productName;
 const shouldUseAsar = argv.asar || argv.a || false;
 const shouldBuildAll = argv.all || false;
 

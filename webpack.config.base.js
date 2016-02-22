@@ -12,6 +12,9 @@ module.exports = {
     }, {
       test: /\.json$/,
       loader: 'json-loader'
+    }, {
+      test: /\.css$/,
+      loader: 'style!css?-autoprefixer&modules&localIdentName=[name]---[local]---[hash:base64:5]'
     }]
   },
   output: {
