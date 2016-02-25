@@ -8,13 +8,19 @@ const Menu = electron.Menu;
 const crashReporter = electron.crashReporter;
 const shell = electron.shell;
 const ipcMain = electron.ipcMain;
+const merge = require('merge');
 let menu;
 let template;
 let mainWindow = null;
+let refreshRate = 2500;
+
+const WebSocketServer = require('ws').Server;
+const wss = new WebSocketServer({port: 3001});
 
 const serverIP = require('./server/serverIP');
 const gamePath = require('./server/gamePath');
 const gameData = require('./server/gameData');
+const websocket = require('./server/websocket');
 
 
 crashReporter.start();
@@ -28,14 +34,55 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
 
-
 /* Communication */
 ipcMain.on('getServerIP', (event) => serverIP.get(event));
 ipcMain.on('setGamePath', (event) => gamePath.set(event));
-ipcMain.on('getGameData', (event) => gameData.get(event));
-
+ipcMain.on('setRefreshRate', (event, arg) => {
+  refreshRate = Math.round(arg.refreshRate);
+});
+ipcMain.on('getGameData', (event) => {
+  gameData.get()
+  .then((response) => {
+    return response.reduce((allGameData, dataPart) => {
+      return merge(allGameData, dataPart);
+    }, {});
+  }).then((allGameData) => {
+    event.sender.send('getGameData', {
+      gameData: allGameData
+    });
+  }).catch((error) => {
+    event.sender.send('getGameData', {
+      error: error
+    });
+  });
+});
 
 /* End of communication */
+
+function getGameData() {
+  setTimeout(() => {
+    gameData.get()
+    .then((response) => {
+      return response.reduce((allGameData, dataPart) => {
+        return merge(allGameData, dataPart);
+      }, {});
+    }).then((allGameData) => {
+      websocket.broadcast('getGameData', {gameData: allGameData});
+      getGameData();
+    }).catch((error) => {
+      websocket.broadcast('getGameData', {error: error});
+      getGameData();
+    });
+  }, refreshRate);
+}
+
+
+/* Websockets communication */
+websocket.initialize(wss);
+getGameData();
+
+
+/* End of websockets communication*/
 
 
 app.on('ready', () => {

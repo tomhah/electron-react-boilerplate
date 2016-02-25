@@ -87,7 +87,8 @@
     "merge": "^1.2.0",
     "react": "^0.14.2",
     "react-dom": "^0.14.2",
-    "style-loader": "^0.12.4"
+    "style-loader": "^0.12.4",
+    "ws": "^1.0.1"
   },
   "devEngines": {
     "node": "4.x || 5.x",

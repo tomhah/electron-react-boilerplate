@@ -1,16 +1,23 @@
 import opened from './signals/opened';
 import selectGameFolderClicked from './signals/selectGameFolderClicked';
+import getGameDataClicked from './signals/getGameDataClicked';
+import refreshRateChanged from './signals/refreshRateChanged';
+import changeRefreshRateClicked from './signals/changeRefreshRateClicked';
 
 export default () => {
   return (module) => {
     module.addState({
       serverIP: '',
-      gamePath: null
+      gamePath: null,
+      refreshRate: 2500
     });
 
     module.addSignals({
       opened,
-      selectGameFolderClicked
+      selectGameFolderClicked,
+      getGameDataClicked,
+      refreshRateChanged,
+      changeRefreshRateClicked
     });
   };
 };
