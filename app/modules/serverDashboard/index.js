@@ -9,7 +9,7 @@ export default () => {
     module.addState({
       serverIP: '',
       gamePath: null,
-      refreshRate: 2500
+      refreshRate: 18
     });
 
     module.addSignals({

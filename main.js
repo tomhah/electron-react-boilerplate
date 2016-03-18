@@ -12,7 +12,7 @@ const merge = require('merge');
 let menu;
 let template;
 let mainWindow = null;
-let refreshRate = 2500;
+let refreshRate = 18;
 
 const WebSocketServer = require('ws').Server;
 const wss = new WebSocketServer({port: 3001});
@@ -40,22 +40,6 @@ ipcMain.on('setGamePath', (event) => gamePath.set(event));
 ipcMain.on('setRefreshRate', (event, arg) => {
   refreshRate = Math.round(arg.refreshRate);
 });
-ipcMain.on('getGameData', (event) => {
-  gameData.get()
-  .then((response) => {
-    return response.reduce((allGameData, dataPart) => {
-      return merge(allGameData, dataPart);
-    }, {});
-  }).then((allGameData) => {
-    event.sender.send('getGameData', {
-      gameData: allGameData
-    });
-  }).catch((error) => {
-    event.sender.send('getGameData', {
-      error: error
-    });
-  });
-});
 
 /* End of communication */
 
@@ -67,9 +51,12 @@ function getGameData() {
         return merge(allGameData, dataPart);
       }, {});
     }).then((allGameData) => {
-      websocket.broadcast('getGameData', {gameData: allGameData});
+      if (allGameData.telemetry && allGameData.scoring) {
+        websocket.broadcast('getGameData', {currentData: allGameData});
+      }
       getGameData();
     }).catch((error) => {
+      console.log('error', error.stack);
       websocket.broadcast('getGameData', {error: error});
       getGameData();
     });

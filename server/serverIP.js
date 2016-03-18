@@ -6,7 +6,7 @@ const ifaces = os.networkInterfaces();
 
 module.exports = {
   get: (event) => {
-    let serverIP = 'No local IP found';
+    let serverIP = 'No local IP found. Make sure you are connected to the network.';
     Object.keys(ifaces).forEach((ifname) => {
       let alias = 0;
 

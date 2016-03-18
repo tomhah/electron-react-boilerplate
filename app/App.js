@@ -16,28 +16,46 @@ class App extends React.Component {
       <div className={styles.wrapper}>
         <div>Server is running on IP: {this.props.serverIP}</div>
         <h1 className={styles.title}>Instructions</h1>
-        <div className={styles.listItem}>
-          {this.props.gamePath ?
-            <div>
-              <div>1. rFactor path: {this.props.gamePath}</div>
+        {this.props.gamePath ?
+          <div className={styles.listItem}>
+            <div className={styles.listItemNumber}>1.</div>
+            <div className={styles.listItemContent}>
+              <div>rFactor path: {this.props.gamePath}</div>
               <button onClick={() => this.props.signals.serverDashboard.selectGameFolderClicked()}>Change path</button>
             </div>
-          :
-            <div>
-              1. <button onClick={() => this.props.signals.serverDashboard.selectGameFolderClicked()}>Select rFactor path</button>
+          </div>
+        :
+          <div className={styles.listItem}>
+            <div className={styles.listItemNumber}>1.</div>
+            <div className={styles.listItemContent}>
+              <button onClick={() => this.props.signals.serverDashboard.selectGameFolderClicked()}>Select rFactor path</button>
             </div>
-          }
+          </div>
+        }
 
-
+        <div className={styles.listItem}>
+          <div className={styles.listItemNumber}>2.</div>
+          <div className={styles.listItemContent}>
+            Start the rFactor Telemetry Client
+          </div>
         </div>
-        <div className={styles.listItem}>2. Start the rFactor Telemetry Client</div>
-        <div className={styles.listItem}>3. Enter <i>{this.props.serverIP}</i> into the IP input</div>
-        <div className={styles.listItem}>4. Start rFactor</div>
-        <br/><br/>
-        <button onClick={() => this.props.signals.serverDashboard.getGameDataClicked()}>Get game data</button>
+        <div className={styles.listItem}>
+          <div className={styles.listItemNumber}>3.</div>
+          <div className={styles.listItemContent}>
+            Enter <i>{this.props.serverIP}</i> into the IP input
+          </div>
+        </div>
+        <div className={styles.listItem}>
+          <div className={styles.listItemNumber}>4.</div>
+          <div className={styles.listItemContent}>Start rFactor</div>
+        </div>
         <br/><br/><br/>
-        <input placeholder="Updates after x ms" value={this.props.refreshRate} onChange={(e) => this.props.signals.serverDashboard.refreshRateChanged({value: e.target.value})}/>
-        <button onClick={() => this.props.signals.serverDashboard.changeRefreshRateClicked()}>Change refresh rate</button>
+        {process.env.NODE_ENV === 'development' ?
+          <div>
+            <input placeholder="Updates after x ms" value={this.props.refreshRate} onChange={(e) => this.props.signals.serverDashboard.refreshRateChanged({value: e.target.value})}/>
+            <button onClick={() => this.props.signals.serverDashboard.changeRefreshRateClicked()}>Change refresh rate</button>
+          </div>
+        : null}
       </div>
     );
   }
