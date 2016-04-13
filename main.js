@@ -21,6 +21,7 @@ const serverIP = require('./server/serverIP');
 const gamePath = require('./server/gamePath');
 const gameData = require('./server/gameData');
 const websocket = require('./server/websocket');
+const config = require('./server/config');
 
 
 crashReporter.start();
@@ -35,6 +36,9 @@ app.on('window-all-closed', () => {
 });
 
 /* Communication */
+ipcMain.on('getStoredGamePath', (event) => {
+  event.sender.send('getStoredGamePath', config.get('gamePath'));
+});
 ipcMain.on('getServerIP', (event) => serverIP.get(event));
 ipcMain.on('setGamePath', (event) => gamePath.set(event));
 ipcMain.on('setRefreshRate', (event, arg) => {

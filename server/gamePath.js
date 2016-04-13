@@ -2,7 +2,8 @@
 'use strict';
 
 const dialog = require('electron').dialog;
-let gamePath = null;
+const config = require('./config');
+let gamePath = config.get('gamePath') || null;
 
 module.exports = {
   set: (event) => {
@@ -11,8 +12,9 @@ module.exports = {
       properties: ['openDirectory']
     }, (fileNames) => {
       gamePath = fileNames[0];
+      config.set({gamePath: gamePath});
       event.sender.send('setGamePath', {
-        gamePath: fileNames[0]
+        gamePath: gamePath
       });
     });
   },
